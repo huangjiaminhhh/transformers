@@ -1717,7 +1717,7 @@ class Trainer:
             if self.is_fsdp_xla_v2_enabled:
 
                 def shard_output(output, mesh):
-                    from .modeling_outputs import CausalLMOutputWithPast
+                    from .modeling_outputs import CausalLMOutputWithPast, SequenceClassifierOutputWithPast
 
                     real_output = None
                     if isinstance(output, torch.Tensor):
@@ -1725,6 +1725,8 @@ class Trainer:
                     elif isinstance(output, tuple):
                         real_output = output[0]
                     elif isinstance(output, CausalLMOutputWithPast):
+                        real_output = output.logits
+                    elif isinstance(output, SequenceClassifierOutputWithPast):
                         real_output = output.logits
 
                     if real_output is None:
