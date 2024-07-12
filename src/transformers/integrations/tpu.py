@@ -31,6 +31,7 @@ def tpu_spmd_dataloader(dataloader: DataLoader):
 
         sharding_spec = xs.ShardingSpec(xs.get_global_mesh(), ("fsdp", None))
         dataloader._parallel_loader_kwargs["input_sharding"] = sharding_spec
+        dataloader._parallel_loader_kwargs["batches_per_execution"] = len(dataloader.dataset)
         return dataloader
     else:
         return dataloader
