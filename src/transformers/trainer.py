@@ -1728,6 +1728,8 @@ class Trainer:
                         real_output = output.logits
                     elif isinstance(output, SequenceClassifierOutputWithPast):
                         real_output = output.logits
+                        xs.mark_sharding(real_output, mesh, ("fsdp", None))
+                        return
 
                     if real_output is None:
                         raise ValueError("Something went wrong, the output of the model shouldn't be `None`")
