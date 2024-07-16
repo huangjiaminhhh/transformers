@@ -870,7 +870,7 @@ class Adafactor(Optimizer):
                 state["RMS"] = self._rms(p_data_fp32)
                 lr = self._get_lr(group, state)
 
-                beta2t = 1.01 - math.pow(state["step"], group["decay_rate"])
+                beta2t = 1.0 - math.pow(state["step"], group["decay_rate"])
                 update = (grad**2) + group["eps"][0]
                 if factored:
                     exp_avg_sq_row = state["exp_avg_sq_row"]
