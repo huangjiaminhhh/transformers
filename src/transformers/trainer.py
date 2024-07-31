@@ -1770,7 +1770,7 @@ class Trainer:
             if self.is_fsdp_xla_v2_enabled:
 
                 def shard_output(output, mesh):
-                    from .modeling_outputs import CausalLMOutputWithPast
+                    from .modeling_outputs import CausalLMOutputWithPast, SequenceClassifierOutputWithPast
 
                     real_output = None
                     if isinstance(output, torch.Tensor):
@@ -1779,6 +1779,10 @@ class Trainer:
                         real_output = output[0]
                     elif isinstance(output, CausalLMOutputWithPast):
                         real_output = output.logits
+                    elif isinstance(output, SequenceClassifierOutputWithPast):
+                        real_output = output.logits
+                        xs.mark_sharding(real_output, mesh, ("fsdp", None))
+                        return
 
                     if real_output is None:
                         raise ValueError("Something went wrong, the output of the model shouldn't be `None`")
